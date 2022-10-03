@@ -8,5 +8,14 @@
     <router-view />
   </div>
 </template>
+<script>
+import config from "@/assets/firebase/config";
+export default {
+  name: "app",
+  created() {
+    config.initFirebase();
+  },
+};
+</script>
 
 <style lang="scss"></style>
