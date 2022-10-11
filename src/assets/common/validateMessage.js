@@ -8,7 +8,7 @@ var validateMessage = {
   PASSWORDCHECK_VALID_FAIL: "비밀번호가 일치하지 않습니다.",
   NOT_INPUT_NICKNAME: "별명을 입력해주세요.",
   NOT_INPUT_QUIZ: "퀴즈 답을 입력해주세요.",
-  NOT_CORRECT_QUIZ: "퀴즈 오답입니다. 다시 입력해주세요.",
+  NOT_CORRECT_QUIZ: "퀴즈 오답. 다시 입력해주세요.",
 };
 
 export default validateMessage;
