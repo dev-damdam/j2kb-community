@@ -75,7 +75,7 @@ export default {
         },
       },
       //modal
-      loginFail: null,
+      loginState: null,
       errorMessage: "",
     };
   },
