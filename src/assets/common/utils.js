@@ -17,14 +17,22 @@ var utils = {
   },
 
   passwordValidation(password) {
-    if (password == "" || password == undefined) {
-      return { state: false, message: validateMessage.NOT_INPUT_PASSWORD };
-    }
+    const inputCheck = this.passwordInputCheck(password);
+
+    if (!inputCheck.state) return inputCheck;
 
     if (this.passwordRegex.test(password)) {
       return { state: true, message: "" };
     } else {
       return { state: false, message: validateMessage.PASSWORD_VALID_FAIL };
+    }
+  },
+
+  passwordInputCheck(password) {
+    if (password == "" || password == undefined) {
+      return { state: false, message: validateMessage.NOT_INPUT_PASSWORD };
+    } else {
+      return { state: true, message: "" };
     }
   },
 
@@ -52,7 +60,6 @@ var utils = {
   },
 
   quizValidation(quiz, answer) {
-    console.log(quiz, answer, quiz == answer);
     if (quiz == "" || quiz == undefined) {
       return { state: false, message: validateMessage.NOT_INPUT_QUIZ };
     }
