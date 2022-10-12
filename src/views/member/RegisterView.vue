@@ -52,6 +52,7 @@
 import utils from "@/assets/common/utils.js";
 import TemplateSignInFooter from "@/components/templates/TemplateSignInFooter.vue";
 import TemplateSignInMain from "@/components/templates/TemplateSignInMain.vue";
+import user from "@/assets/firebase/user";
 export default {
   components: { TemplateSignInFooter, TemplateSignInMain },
   name: "register-view",
@@ -153,11 +154,9 @@ export default {
     },
     register() {
       const check = this.formValidatedCheck();
-
       if (!check) return;
 
-      // todo : impl register
-      this.$router.push("/home");
+      user.register(this.email, this.password, this.nickname);
     },
   },
 };
