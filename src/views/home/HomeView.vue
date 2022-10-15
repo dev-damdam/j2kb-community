@@ -110,6 +110,8 @@ export default {
     z-index: 1;
     width: 80%;
     height: 100%;
+
+    padding-left: 5%;
   }
 }
 </style>
