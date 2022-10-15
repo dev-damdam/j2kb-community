@@ -3,6 +3,7 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   sendEmailVerification,
+  sendPasswordResetEmail,
   createUserWithEmailAndPassword,
   signOut,
   deleteUser,
@@ -11,30 +12,50 @@ import {
 import { getDatabase, ref, set, remove } from "firebase/database";
 
 let user = {
+  auth: null,
+  db: null,
+
+  setAuth() {
+    this.auth = getAuth();
+  },
+  setDB() {
+    this.db = getDatabase();
+  },
+
   signIn(email, password) {
-    const auth = getAuth();
-    return signInWithEmailAndPassword(auth, email, password);
+    return signInWithEmailAndPassword(this.auth, email, password);
   },
   register(email, password, nickname) {
-    const auth = getAuth();
-
-    createUserWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPassword(this.auth, email, password)
       .then(() => {
-        sendEmailVerification(auth.currentUser)
+        sendEmailVerification(this.auth.currentUser)
           .then(() => {
-            const user = auth.currentUser;
+            const user = this.auth.currentUser;
             // add user in db
             this.addUser(user.uid, email, nickname);
             this.signOut();
           })
           .catch((error) => {
-            this.delete(auth.currentUser);
+            this.delete(this.auth.currentUser);
             console.log(error.code);
+            console.log("Failed send email verification");
           });
       })
       .catch((error) => {
-        this.delete(auth.currentUser);
+        this.delete(this.auth.currentUser);
         console.log(error.code);
+        console.log("Failed create user with email password");
+      });
+  },
+  updatePassword() {
+    sendPasswordResetEmail(this.auth, this.auth.currentUser.email)
+      .then(() => {
+        // Password reset email sent!
+        console.log("Success send password reset email");
+      })
+      .catch((error) => {
+        console.log(error.code);
+        console.log("Failed send password reset email");
       });
   },
   delete(user) {
@@ -50,8 +71,7 @@ let user = {
       });
   },
   signOut() {
-    const auth = getAuth();
-    signOut(auth)
+    signOut(this.auth)
       .then(() => {
         console.log("Successful sign out");
         this.$router.push("/");
@@ -62,8 +82,7 @@ let user = {
       });
   },
   addUser(uid, email, nickname) {
-    const db = getDatabase();
-    set(ref(db, "users/" + uid), {
+    set(ref(this.db, "users/" + uid), {
       nickname: nickname,
       email: email,
     })
@@ -76,8 +95,7 @@ let user = {
       });
   },
   removeUser(uid) {
-    const db = getDatabase();
-    remove(ref(db, "users/" + uid))
+    remove(ref(this.db, "users/" + uid))
       .then(() => {
         console.log("Successful remove user");
       })
