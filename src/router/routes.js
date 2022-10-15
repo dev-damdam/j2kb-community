@@ -1,6 +1,7 @@
-import HomeView from "../views/HomeView.vue";
+import HomeView from "../views/home/HomeView.vue";
 import LoginView from "../views/member/LoginView.vue";
 import RegisterView from "../views/member/RegisterView.vue";
+import PostListView from "../views/post/PostListView.vue";
 
 const routes = [
   {
@@ -17,6 +18,11 @@ const routes = [
     path: "/",
     name: "login",
     component: LoginView,
+  },
+  {
+    path: "/post-list",
+    name: "post-list",
+    component: PostListView,
   },
 ];
 
