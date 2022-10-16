@@ -1,5 +1,5 @@
 <template>
-  <div class="post-board-view-wrapper">
+  <div class="board-view-wrapper">
     <b-tabs no-fade>
       <b-tab title-link-class="title-link-class" title="일반 게시판" active>
         <general-board-view />
@@ -11,16 +11,16 @@
   </div>
 </template>
 <script>
-import GeneralBoardView from "./board/GeneralBoardView.vue";
-import HotBoardView from "./board/HotBoardView.vue";
+import GeneralBoardView from "./GeneralBoardView.vue";
+import HotBoardView from "./HotBoardView.vue";
 export default {
   components: { GeneralBoardView, HotBoardView },
-  name: "post-board-view",
+  name: "board-view",
 };
 </script>
 
 <style lang="scss" scoped>
-.post-board-view-wrapper {
+.board-view-wrapper {
   width: 100%;
   height: 100%;
 
