@@ -1,7 +1,8 @@
 import HomeView from "../views/home/HomeView.vue";
 import LoginView from "../views/member/LoginView.vue";
 import RegisterView from "../views/member/RegisterView.vue";
-import PostBoardView from "../views/post/PostBoardView.vue";
+import PostBoardView from "../views/board/BoardView.vue";
+import WritePostView from "../views/home/post/WritePostView.vue";
 
 const routes = [
   {
@@ -14,6 +15,11 @@ const routes = [
         path: "/",
         name: "post-board",
         component: PostBoardView,
+      },
+      {
+        path: "write-post",
+        name: "write-post",
+        component: WritePostView,
       },
     ],
   },

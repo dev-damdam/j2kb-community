@@ -24,6 +24,7 @@ export default {
   components: { MyMenuSide },
   data() {
     return {
+      id: 0,
       menuList: [
         {
           name: "정보 수정",
@@ -31,7 +32,7 @@ export default {
         },
         {
           name: "글 작성하기",
-          link: "my-post",
+          link: "write-post",
         },
         {
           name: "내가 쓴 글 보기",
@@ -46,7 +47,11 @@ export default {
   },
   methods: {
     selectMenu(menu) {
-      console.log(menu);
+      console.log(menu.link);
+      this.$router.push({
+        name: `${menu.link}`,
+        params: { id: this.id },
+      });
     },
   },
 };
