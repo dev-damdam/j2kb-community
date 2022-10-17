@@ -8,6 +8,7 @@
       :perPage="perPage"
       :current-page="currentPage"
       thead-tr-class="thead-tr-class"
+      @row-clicked="rowClicked"
     />
     <b-pagination
       class="pb-5"
@@ -60,6 +61,11 @@ export default {
       },
     },
   },
+  methods: {
+    rowClicked(item, index, event) {
+      this.$emit("row-clicked", item, index, event);
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -83,6 +89,10 @@ export default {
 
 ::v-deep table.b-table thead th.w45 {
   width: 45%;
+}
+
+::v-deep table.b-table thead th.w60 {
+  width: 60%;
 }
 
 ::v-deep table tbody tr td {

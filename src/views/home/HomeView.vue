@@ -24,7 +24,7 @@ export default {
   components: { MyMenuSide },
   data() {
     return {
-      id: 0,
+      nickname: "홍길동",
       menuList: [
         {
           name: "정보 수정",
@@ -50,7 +50,7 @@ export default {
       console.log(menu.link);
       this.$router.push({
         name: `${menu.link}`,
-        params: { id: this.id },
+        params: { nickname: this.nickname },
       });
     },
   },
@@ -117,6 +117,7 @@ export default {
     height: 100%;
 
     padding-left: 5%;
+    overflow: overlay;
   }
 }
 </style>

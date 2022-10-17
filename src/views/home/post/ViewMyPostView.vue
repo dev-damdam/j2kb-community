@@ -1,5 +1,5 @@
 <template>
-  <div class="general-board-view-wrapper">
+  <div class="view-my-post-view-wrapper">
     <module-table
       :items="items"
       :fields="fields"
@@ -11,13 +11,20 @@
 </template>
 <script>
 import ModuleTable from "@/components/modules/ModuleTable.vue";
+
 export default {
   components: { ModuleTable },
-  name: "general-board-view",
+  name: "view-my-post-view",
+  props: {
+    id: {
+      type: Number,
+      require: true,
+    },
+  },
   data() {
     return {
       items: [],
-      perPage: 10,
+      perPage: 20,
       currentPage: 1,
       fields: [
         {
@@ -30,13 +37,7 @@ export default {
           key: "title",
           label: "제목",
           sortable: false,
-          thClass: "w45",
-        },
-        {
-          key: "writer",
-          label: "작성자",
-          sortable: false,
-          thClass: "w15",
+          thClass: "w60",
         },
         {
           key: "write_date",
@@ -56,7 +57,6 @@ export default {
         this.items.push({
           id: i,
           title: "이것은 테스트입니다.",
-          writer: "홍길동",
           write_date: "2022.10.06",
         });
       }
@@ -72,8 +72,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.general-board-view-wrapper {
+.view-my-post-view-wrapper {
   width: 100%;
-  height: 100%;
 }
 </style>
