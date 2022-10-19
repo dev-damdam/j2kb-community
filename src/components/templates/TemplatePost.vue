@@ -71,21 +71,8 @@ export default {
   },
   data() {
     return {
-      post: {
-        pid: 0,
-        title: "",
-        writer: "",
-        write_date: "",
-        content: "",
-        likes: 0,
-        comments: [],
-      },
-      comment: {
-        pid: 0,
-        nickname: "",
-        content: "",
-        write_date: "",
-      },
+      post: {},
+      comment: {},
     };
   },
   computed: {
@@ -103,13 +90,11 @@ export default {
     setSampleData() {
       if (this.mode == "write") {
         this.post = {
-          pid: 0,
           title: "",
           writer: "",
           write_date: "",
           content: "",
           likes: 0,
-          comments: [],
         };
       } else {
         this.post = {
@@ -157,6 +142,9 @@ export default {
     },
     writePost() {
       console.log("write post");
+      // test
+      this.post.writer = "홍길동";
+      this.post.write_date = new Date();
       this.$emit("write", this.post);
     },
   },
