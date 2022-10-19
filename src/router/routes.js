@@ -21,6 +21,11 @@ const routes = [
         name: "write-post",
         component: WritePostView,
       },
+      {
+        path: "my-post",
+        name: "my-post",
+        component: MyPostView,
+      },
     ],
   },
   {

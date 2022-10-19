@@ -36,7 +36,7 @@ export default {
         },
         {
           name: "내가 쓴 글 보기",
-          link: "view-my-post",
+          link: "my-post",
         },
         {
           name: "내가 쓴 댓글 보기",

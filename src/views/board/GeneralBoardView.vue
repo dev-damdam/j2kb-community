@@ -1,15 +1,16 @@
 <template>
   <div class="general-board-view-wrapper">
     <module-table
-      :items="items"
-      :fields="fields"
-      :totalRows="items.length"
-      :perPage="perPage"
+          :items="items"
+          :fields="fields"
+          :totalRows="items.length"
+          :perPage="perPage"
     />
   </div>
 </template>
 <script>
 import ModuleTable from "@/components/modules/ModuleTable.vue";
+
 export default {
   components: { ModuleTable },
   name: "general-board-view",

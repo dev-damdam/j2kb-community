@@ -2,11 +2,13 @@
   <div class="template-post-wrapper">
     <form class="post-form">
       <section class="title-wrapper" :class="modeClass">
-        <b-input
-          class="title-input"
-          v-model="post.title"
-          placeholder="제목을 입력해주세요."
-        />
+        <form v-on:submit.prevent="addPost">
+          <b-input
+            class="title-input"
+            v-model="post.title"
+            placeholder="제목을 입력해주세요."
+          />
+        </form>
         <div v-if="mode == 'read'" class="ml-3 button-wrapper">
           <b-button @click="modifyPost">수정하기</b-button>
           <b-button @click="deletePost">삭제하기</b-button>
@@ -18,14 +20,16 @@
       </section>
 
       <section class="content-wrapper">
-        <b-form-textarea
-          class="content-textarea"
-          v-model="post.content"
-          placeholder="내용을 입력해주세요."
-          :rows="mode == 'read' ? 15 : 20"
-          no-resize
-        >
-        </b-form-textarea>
+        <form v-on:submit.prevent="addPost">
+          <b-form-textarea
+            class="content-textarea"
+            v-model="post.content"
+            placeholder="내용을 입력해주세요."
+            :rows="mode == 'read' ? 15 : 20"
+            no-resize
+          >
+          </b-form-textarea>
+        </form>
       </section>
       <section v-if="mode == 'read'" class="likes-wrapper">
         <b-button pill variant="outline-primary">
@@ -52,15 +56,17 @@
           </b-button>
         </div>
       </section>
+      <section v-if="mode == 'write'" class="mt-5 post-btn-wrapper">
+        <b-button @click="addPost" variant="outline-primary">
+          게시글 작성하기
+        </b-button>
+      </section>
     </form>
-    <section v-if="mode == 'write'" class="mt-5 post-btn-wrapper">
-      <b-button @click="addPost" variant="outline-primary">
-        게시글 작성하기
-      </b-button>
-    </section>
   </div>
 </template>
 <script>
+import db from "@/assets/firebase/init";
+
 export default {
   name: "template-post",
   props: {
@@ -137,8 +143,20 @@ export default {
     addComment() {
       console.log(this.comment);
     },
-    addPost() {
-      console.log("게시글 작성");
+    addPost(event) {
+      event.preventDefault();
+      db.collection("posts")
+        .add(this.post)
+        .then(() => {
+          alert("Post successfully created!");
+          this.post.title = "";
+          this.post.writer = "";
+          this.post.writing = "";
+          this.post.date = "";
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };
