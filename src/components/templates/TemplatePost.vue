@@ -43,7 +43,7 @@
 
         <div class="comment-input-wrapper">
           <b-input
-            v-model="comment"
+            v-model="comment.content"
             placeholder="댓글을 작성해주세요."
             class="mr-3 comment-input"
           />
@@ -54,7 +54,7 @@
       </section>
     </form>
     <section v-if="mode == 'write'" class="mt-5 post-btn-wrapper">
-      <b-button @click="addPost" variant="outline-primary">
+      <b-button @click="writePost" variant="outline-primary">
         게시글 작성하기
       </b-button>
     </section>
@@ -72,6 +72,7 @@ export default {
   data() {
     return {
       post: {
+        pid: 0,
         title: "",
         writer: "",
         write_date: "",
@@ -79,7 +80,12 @@ export default {
         likes: 0,
         comments: [],
       },
-      comment: "",
+      comment: {
+        pid: 0,
+        nickname: "",
+        content: "",
+        write_date: "",
+      },
     };
   },
   computed: {
@@ -97,6 +103,7 @@ export default {
     setSampleData() {
       if (this.mode == "write") {
         this.post = {
+          pid: 0,
           title: "",
           writer: "",
           write_date: "",
@@ -106,6 +113,7 @@ export default {
         };
       } else {
         this.post = {
+          pid: 0,
           title: "이것은 테스트 입니다.",
           writer: "홍길동",
           write_date: "2022.10.16 10:32:12",
@@ -113,12 +121,14 @@ export default {
           likes: 2,
           comments: [
             {
+              pid: 0,
               id: 0,
               nickname: "기요미",
               content: "와,, 저도 요즘 이런 고민을 하고 있었어요~",
               write_date: "2022.10.16 20:10:12",
             },
             {
+              pid: 0,
               id: 1,
               nickname: "Lucy",
               content: "댓글 감사합니다!",
@@ -130,15 +140,24 @@ export default {
     },
     modifyPost() {
       console.log("modify");
+      this.$emit("modify", this.post);
     },
     deletePost() {
       console.log("delete");
+      this.$emit("delete", this.post.pid);
     },
     addComment() {
-      console.log(this.comment);
+      console.log("add comment");
+
+      // test
+      this.comment.pid = this.post.pid;
+      this.comment.nickname = "누누";
+      this.comment.write_date = new Date();
+      this.$emit("add-comment", this.comment);
     },
-    addPost() {
-      console.log("게시글 작성");
+    writePost() {
+      console.log("write post");
+      this.$emit("write", this.post);
     },
   },
 };
