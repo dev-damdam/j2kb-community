@@ -24,15 +24,15 @@ export default {
       type: Array,
       require: true,
     },
+    nickname: {
+      type: String,
+      default: "",
+    },
   },
   data() {
     return {
       currentMenu: {},
-      nickname: "",
     };
-  },
-  created() {
-    this.nickname = "홍길순";
   },
   methods: {
     selectMenu(menu) {

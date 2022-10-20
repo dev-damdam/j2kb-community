@@ -10,7 +10,12 @@
       <img class="bg-flower" src="@/assets/imgs/home/flower.png" />
       <img class="bg-heart" src="@/assets/imgs/home/heart.png" />
     </div>
-    <my-menu-side :menu-list="menuList" class="side" @menu="selectMenu" />
+    <my-menu-side
+      :nickname="nickname"
+      :menu-list="menuList"
+      class="side"
+      @menu="selectMenu"
+    />
     <main class="main">
       <router-view />
     </main>
@@ -18,13 +23,14 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import MyMenuSide from "./MyMenuSide.vue";
 export default {
   name: "HomeView",
   components: { MyMenuSide },
   data() {
     return {
-      nickname: "홍길동",
+      nickname: "",
       menuList: [
         {
           name: "정보 수정",
@@ -45,9 +51,14 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapGetters(["getUserInfo"]),
+  },
+  created() {
+    this.nickname = this.getUserInfo.nickname;
+  },
   methods: {
     selectMenu(menu) {
-      console.log(menu.link);
       this.$router.push({
         name: `${menu.link}`,
         params: { nickname: this.nickname },

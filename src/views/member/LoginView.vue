@@ -45,9 +45,11 @@
   </div>
 </template>
 <script>
-import user from "@/assets/firebase/user";
+// import user from "@/assets/firebase/user";
 import utils from "@/assets/common/utils";
-import authErrorMessages from "@/assets/firebase/authErrorMessage";
+import { mapActions } from "vuex";
+// import authErrorMessages from "@/assets/firebase/authErrorMessage";
+import { mapGetters } from "vuex";
 import TemplateSignInMain from "@/components/templates/TemplateSignInMain.vue";
 import TemplateSignInFooter from "@/components/templates/TemplateSignInFooter.vue";
 
@@ -71,7 +73,11 @@ export default {
       errorMessage: "",
     };
   },
+  computed: {
+    ...mapGetters(["getUser"]),
+  },
   methods: {
+    ...mapActions(["signInAction", "getUserInfoAction"]),
     initValidatedState() {
       this.validateCheck = {
         email: {
@@ -110,23 +116,16 @@ export default {
 
       if (!check) return;
 
-      user
-        .signIn(this.email, this.password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          if (user.emailVerified) {
-            this.$router.push("/home");
-          } else {
-            this.$router.push("/not-email-verified");
-          }
-        })
-        .catch((error) => {
-          console.log(error.code);
-          console.log(error.message);
-          this.validateCheck.email.state = false;
-          this.validateCheck.password.state = false;
-          this.errorMessage = authErrorMessages.getErrorMessage(error.code);
-        });
+      this.signInAction({ email: this.email, password: this.password });
+      this.getUserInfoAction(this.getUser.uid);
+
+      //   .catch((error) => {
+      //     console.log(error.code);
+      //     console.log(error.message);
+      //     this.validateCheck.email.state = false;
+      //     this.validateCheck.password.state = false;
+      //     this.errorMessage = authErrorMessages.getErrorMessage(error.code);
+      //   });
     },
   },
 };
