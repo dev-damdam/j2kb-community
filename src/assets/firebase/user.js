@@ -7,9 +7,11 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   deleteUser,
+  setPersistence,
+  browserSessionPersistence,
 } from "firebase/auth";
 
-import { getDatabase, ref, set, remove } from "firebase/database";
+import { getDatabase, ref, set, remove, get } from "firebase/database";
 
 let user = {
   auth: null,
@@ -17,6 +19,7 @@ let user = {
 
   setAuth() {
     this.auth = getAuth();
+    setPersistence(this.auth, browserSessionPersistence);
   },
   setDB() {
     this.db = getDatabase();
@@ -103,6 +106,12 @@ let user = {
         console.log(error.code);
         console.log("Failed remove user");
       });
+  },
+  async getUserInfo(uid) {
+    let user;
+    const snapshot = await get(ref(this.db, "users/" + uid));
+    user = snapshot.val();
+    return user;
   },
 };
 
