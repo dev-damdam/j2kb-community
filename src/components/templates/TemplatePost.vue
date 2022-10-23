@@ -6,8 +6,9 @@
           class="title-input"
           v-model="post.title"
           placeholder="제목을 입력해주세요."
+          :disabled="!checkWriter"
         />
-        <div v-if="mode == 'read'" class="ml-3 button-wrapper">
+        <div v-if="mode == 'read' && checkWriter" class="ml-3 button-wrapper">
           <b-button @click="modifyPost">수정하기</b-button>
           <b-button @click="deletePost">삭제하기</b-button>
         </div>
@@ -24,6 +25,7 @@
           placeholder="내용을 입력해주세요."
           :rows="mode == 'read' ? 15 : 20"
           no-resize
+          :disabled="!checkWriter"
         >
         </b-form-textarea>
       </section>
@@ -39,6 +41,9 @@
           <span class="nickname">{{ comment.nickname }}</span>
           <span class="content">{{ comment.content }}</span>
           <span class="write_date">{{ comment.write_date }}</span>
+          <b-button v-if="checkWriter" @click.prevent="deleteComment(comment)">
+            <b-icon icon="trash" />
+          </b-button>
         </div>
 
         <div class="comment-input-wrapper">
@@ -61,6 +66,8 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "template-post",
   props: {
@@ -76,10 +83,14 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["getUserInfo"]),
     modeClass: {
       get() {
         return this.mode == "write" ? "write-mode-title" : "read-mode-title";
       },
+    },
+    checkWriter() {
+      return this.post.writer == this.getUserInfo.nickname;
     },
   },
   mounted() {
@@ -136,16 +147,20 @@ export default {
 
       // test
       this.comment.pid = this.post.pid;
-      this.comment.nickname = "누누";
+      this.comment.writer = this.getUserInfo.nickname;
       this.comment.write_date = new Date();
       this.$emit("add-comment", this.comment);
     },
     writePost() {
       console.log("write post");
       // test
-      this.post.writer = "홍길동";
+      this.post.writer = this.getUserInfo.nickname;
       this.post.write_date = new Date();
       this.$emit("write", this.post);
+    },
+    deleteComment(comment) {
+      console.log("delete comment");
+      this.$emit("delete-comment", comment.id);
     },
   },
 };
@@ -267,5 +282,9 @@ export default {
   .post-btn-wrapper {
     text-align: center;
   }
+}
+
+::v-deep .form-control:disabled {
+  background-color: white;
 }
 </style>

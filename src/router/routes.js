@@ -5,6 +5,7 @@ import PostBoardView from "../views/board/BoardView.vue";
 import WritePostView from "../views/home/post/WritePostView.vue";
 import ViewMyPostView from "../views/home/post/ViewMyPostView.vue";
 import PostDetailView from "../views/home/post/PostDetailView.vue";
+import ViewMyCommentView from "../views/home/post/ViewMyCommentView.vue";
 
 const routes = [
   {
@@ -14,8 +15,8 @@ const routes = [
 
     children: [
       {
-        path: "/",
-        name: "post-board/:nickname",
+        path: "post-board",
+        name: "post-board",
         component: PostBoardView,
         params: true,
       },
@@ -32,10 +33,15 @@ const routes = [
         params: true,
       },
       {
-        path: "view-post-detail/:id",
+        path: "view-post-detail/:pid",
         name: "view-post-detail",
         component: PostDetailView,
         params: true,
+      },
+      {
+        path: "view-my-comment/:nickname",
+        name: "view-my-comment",
+        component: ViewMyCommentView,
       },
     ],
   },

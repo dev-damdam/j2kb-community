@@ -17,7 +17,7 @@ export default {
   data() {
     return {
       items: [],
-      perPage: 10,
+      perPage: 20,
       currentPage: 1,
       fields: [
         {
@@ -48,7 +48,7 @@ export default {
     };
   },
   mounted() {
-    this.setSampleData();
+    // this.setSampleData();
   },
   methods: {
     setSampleData() {
@@ -65,7 +65,7 @@ export default {
       console.log(item, index, event);
       this.$router.push({
         name: "view-post-detail",
-        params: { id: item.id },
+        params: { pid: item.id },
       });
     },
   },
