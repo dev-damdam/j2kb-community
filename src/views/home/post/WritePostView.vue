@@ -1,6 +1,7 @@
 <template>
   <div>
     <template-post mode="write" @write="writePost" />
+    <b-modal v-model="modalShow">{{ message }}</b-modal>
   </div>
 </template>
 <script>
@@ -8,6 +9,12 @@ import TemplatePost from "@/components/templates/TemplatePost.vue";
 export default {
   components: { TemplatePost },
   name: "write-post-view",
+  data() {
+    return {
+      modalShow: false,
+      message: "",
+    };
+  },
   methods: {
     writePost(postInfo) {
       // todo : implement write post func
@@ -21,6 +28,8 @@ export default {
       //     likes: 0,
       // }
       console.log(postInfo);
+      this.modalShow = true;
+      this.message = "게시글이 작성되었습니다.";
     },
   },
 };
