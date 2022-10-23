@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="items.length > 0">
     <b-table
       class="module-board"
       :items="items"
@@ -19,6 +19,9 @@
       limit="10"
       hide-ellipsis
     />
+  </div>
+  <div v-else class="no-post-wrapper p-3">
+    <span>게시글이 없습니다.</span>
   </div>
 </template>
 <script>
@@ -77,6 +80,15 @@ export default {
 .module-board {
   background-color: white;
   border: 1px solid #dee2e6;
+}
+
+.no-post-wrapper {
+  background-color: white;
+  width: 100%;
+  text-align: center;
+  border-left: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
 }
 
 ::v-deep table.b-table thead th.w15 {
