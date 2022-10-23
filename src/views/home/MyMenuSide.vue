@@ -34,6 +34,9 @@ export default {
       currentMenu: {},
     };
   },
+  mounted() {
+    this.selectMenu(this.menuList[0]);
+  },
   methods: {
     selectMenu(menu) {
       this.currentMenu = menu;

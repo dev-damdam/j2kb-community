@@ -16,7 +16,7 @@
       class="side"
       @menu="selectMenu"
     />
-    <main class="main">
+    <main ref="main" class="main">
       <router-view />
     </main>
   </div>
@@ -32,6 +32,10 @@ export default {
     return {
       nickname: "",
       menuList: [
+        {
+          name: "게시판",
+          link: "post-board",
+        },
         {
           name: "정보 수정",
           link: "update-profile",
@@ -57,8 +61,10 @@ export default {
   created() {
     this.nickname = this.getUserInfo.nickname;
   },
+  mounted() {},
   methods: {
     selectMenu(menu) {
+      this.$refs.main.scrollTop = 0;
       this.$router.push({
         name: `${menu.link}`,
         params: { nickname: this.nickname },
