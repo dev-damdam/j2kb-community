@@ -88,6 +88,7 @@ let user = {
     set(ref(this.db, "users/" + uid), {
       nickname: nickname,
       email: email,
+      register_date: new Date().toUTCString(),
     })
       .then(() => {
         console.log("Successful add user");
