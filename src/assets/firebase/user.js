@@ -11,7 +11,7 @@ import {
   browserSessionPersistence,
 } from "firebase/auth";
 
-import { getDatabase, ref, set, remove, get } from "firebase/database";
+import { ref, set, remove, get } from "firebase/database";
 
 let user = {
   auth: null,
@@ -21,8 +21,8 @@ let user = {
     this.auth = getAuth();
     setPersistence(this.auth, browserSessionPersistence);
   },
-  setDB() {
-    this.db = getDatabase();
+  setDB(db) {
+    this.db = db;
   },
 
   signIn(email, password) {

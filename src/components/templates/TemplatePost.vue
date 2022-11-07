@@ -75,6 +75,10 @@ export default {
       type: String,
       require: true,
     },
+    reset: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -90,12 +94,28 @@ export default {
       },
     },
     checkWriter() {
-      return this.post.writer == this.getUserInfo.nickname;
+      if (this.mode == "write") {
+        return true;
+      } else {
+        return this.post.writer == this.getUserInfo.nickname;
+      }
     },
   },
-  mounted() {
+  created() {
     //set sample data
     this.setSampleData();
+  },
+  watch: {
+    reset(value) {
+      if (value) {
+        this.post = {
+          title: "",
+          writer: "",
+          write_date: "",
+          content: "",
+        };
+      }
+    },
   },
   methods: {
     setSampleData() {
@@ -105,7 +125,6 @@ export default {
           writer: "",
           write_date: "",
           content: "",
-          likes: 0,
         };
       } else {
         this.post = {
@@ -148,14 +167,14 @@ export default {
       // test
       this.comment.pid = this.post.pid;
       this.comment.writer = this.getUserInfo.nickname;
-      this.comment.write_date = new Date();
+      this.comment.write_date = new Date().toUTCString();
       this.$emit("add-comment", this.comment);
     },
     writePost() {
       console.log("write post");
       // test
       this.post.writer = this.getUserInfo.nickname;
-      this.post.write_date = new Date();
+      this.post.write_date = new Date().toUTCString();
       this.$emit("write", this.post);
     },
     deleteComment(comment) {
