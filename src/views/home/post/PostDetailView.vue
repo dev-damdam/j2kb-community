@@ -1,27 +1,64 @@
 <template>
-  <div>
+  <div class="post-detail-view-wrapper">
     <template-post
+      v-if="dataLoading"
       mode="read"
+      :data="postData"
       @modify="modifyPost"
       @delete="deletePost"
       @add-comment="addComment"
       @delete-comment="deleteComment"
     />
+    <beat-loader
+      class="loader"
+      :loading="loader.loading"
+      :color="loader.color"
+    ></beat-loader>
     <b-modal v-model="modalShow">{{ message }}</b-modal>
   </div>
 </template>
 <script>
+import BeatLoader from "vue-spinner/src/BeatLoader.vue";
+import board from "@/assets/firebase/board";
 import TemplatePost from "@/components/templates/TemplatePost.vue";
 export default {
-  components: { TemplatePost },
-  name: "view-my-post-view",
+  components: { TemplatePost, BeatLoader },
+  name: "view-post-detail",
+  props: {
+    pid: {
+      type: String,
+      require: true,
+    },
+    type: {
+      type: String,
+      require: true,
+    },
+  },
+  created() {
+    this.getPostDetail();
+  },
   data() {
     return {
       modalShow: false,
       message: "",
+      postData: {},
+      loader: {
+        loading: false,
+        color: "#0000fd",
+      },
+      dataLoading: false,
     };
   },
   methods: {
+    async getPostDetail() {
+      this.loader.loading = true;
+      await board.getPostDetail(this.type, this.pid).then((snapshot) => {
+        console.log(snapshot.val());
+        this.postData = snapshot.val();
+        this.loader.loading = false;
+        this.dataLoading = true;
+      });
+    },
     modifyPost(postInfo) {
       // todo : implemnt modify post func
       // 이 함수에다가 작성한 게시글 업데이트 코드 작성해주세요.
@@ -76,3 +113,18 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.post-detail-view-wrapper {
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  .loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+</style>

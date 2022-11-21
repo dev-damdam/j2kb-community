@@ -89,7 +89,7 @@ export default {
       console.log(item, index, event);
       this.$router.push({
         name: "view-post-detail",
-        params: { pid: item.pid },
+        params: { pid: item.pid, type: "general" },
       });
     },
   },

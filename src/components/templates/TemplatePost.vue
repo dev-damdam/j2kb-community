@@ -79,6 +79,12 @@ export default {
       type: Boolean,
       default: false,
     },
+    data: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
   },
   data() {
     return {
@@ -102,6 +108,7 @@ export default {
     },
   },
   created() {
+    console.log(1);
     //set sample data
     this.setSampleData();
   },
@@ -116,6 +123,9 @@ export default {
         };
       }
     },
+    // data(value) {
+    //   this.post = value;
+    // },
   },
   methods: {
     setSampleData() {
@@ -128,12 +138,12 @@ export default {
         };
       } else {
         this.post = {
-          pid: 0,
-          title: "이것은 테스트 입니다.",
-          writer: "홍길동",
-          write_date: "2022.10.16 10:32:12",
-          content: "테스트용으로 글을 작성합니다.",
-          likes: 2,
+          pid: this.data.pid,
+          title: this.data.title,
+          writer: this.data.writer,
+          write_date: this.data.write_date,
+          content: this.data.content,
+          likes: this.data.likes,
           comments: [
             {
               pid: 0,
