@@ -5,6 +5,8 @@
       :fields="fields"
       :totalRows="items.length"
       :perPage="perPage"
+      sort-by="id"
+      :sort-desc="true"
       @row-clicked="showDetailPost"
     />
     <beat-loader

@@ -1,11 +1,14 @@
-import { ref, update, push, child, get } from "firebase/database";
+import { ref, update, push, child, get, remove } from "firebase/database";
 
 let board = {
   db: null,
+
   setDB(db) {
     this.db = db;
   },
+
   writePost(nickname, title, content, write_date) {
+    // 게시글 작성 함수
     const postData = {
       writer: nickname,
       title: title,
@@ -23,6 +26,7 @@ let board = {
   },
 
   updatePost(type, pid, title, content) {
+    // 게시글 수정 함수
     console.log(`/posts/${type}/${pid}/`);
     return update(ref(this.db, `/posts/${type}/${pid}`), {
       title: title,
@@ -30,12 +34,20 @@ let board = {
     });
   },
 
+  deletePost(type, pid) {
+    // 게시글 삭제 함수
+    const postRef = ref(this.db, `/posts/${type}/${pid}`);
+    return remove(postRef);
+  },
+
   getGeneralPostList() {
+    // 일반 게시판 게시글 목록 가져오는 함수
     const postRef = ref(this.db, "posts/");
     return get(child(postRef, "general/"));
   },
 
   getPostDetail(type, pid) {
+    // 게시글 상세 정보 가져오는 함수
     const postRef = ref(this.db, "posts/");
     return get(child(postRef, `${type}/${pid}/`));
   },

@@ -7,6 +7,8 @@
       :totalRows="items.length"
       :perPage="perPage"
       :current-page="currentPage"
+      :sort-by="sortBy"
+      :sort-desc="sortDesc"
       thead-tr-class="thead-tr-class"
       @row-clicked="rowClicked"
     />
@@ -43,6 +45,14 @@ export default {
     totalRows: {
       type: Number,
       require: true,
+    },
+    sortBy: {
+      type: String,
+      default: "",
+    },
+    sortDesc: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

@@ -123,21 +123,22 @@ export default {
         };
       }
     },
-    // data(value) {
-    //   this.post = value;
-    // },
   },
   methods: {
     setSampleData() {
       if (this.mode == "write") {
         this.post = {
+          type: "general",
+          pid: "",
           title: "",
           writer: "",
           write_date: "",
           content: "",
         };
       } else {
+        console.log(this.data);
         this.post = {
+          type: this.data.type,
           pid: this.data.pid,
           title: this.data.title,
           writer: this.data.writer,
@@ -169,7 +170,7 @@ export default {
     },
     deletePost() {
       console.log("delete");
-      this.$emit("delete", this.post.pid);
+      this.$emit("delete", this.post.type, this.post.pid);
     },
     addComment() {
       console.log("add comment");

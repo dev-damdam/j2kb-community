@@ -14,7 +14,13 @@
       :loading="loader.loading"
       :color="loader.color"
     ></beat-loader>
-    <b-modal v-model="modalShow">{{ message }}</b-modal>
+    <b-modal v-model="modalShow">
+      {{ message }}
+      <template #modal-footer>
+        <!-- Emulate built in modal footer ok and cancel button actions -->
+        <b-button size="sm" variant="success" @click="modalOk()"> OK </b-button>
+      </template>
+    </b-modal>
   </div>
 </template>
 <script>
@@ -47,6 +53,7 @@ export default {
         color: "#0000fd",
       },
       dataLoading: false,
+      isBack: false,
     };
   },
   methods: {
@@ -54,7 +61,16 @@ export default {
       this.loader.loading = true;
       await board.getPostDetail(this.type, this.pid).then((snapshot) => {
         console.log(snapshot.val());
-        this.postData = snapshot.val();
+        this.postData = {
+          type: this.type,
+          pid: this.pid,
+          title: snapshot.val().title,
+          writer: snapshot.val().writer,
+          write_date: snapshot.val().write_date,
+          content: snapshot.val().content,
+          likes: snapshot.val().likes,
+          //comments: snapshot.val().comments
+        };
         this.loader.loading = false;
         this.dataLoading = true;
       });
@@ -74,7 +90,12 @@ export default {
       // },
       // ex) post.modify(postInfo);
       await board
-        .updatePost(this.type, this.pid, postInfo.title, postInfo.content)
+        .updatePost(
+          postInfo.type,
+          postInfo.pid,
+          postInfo.title,
+          postInfo.content
+        )
         .then(() => {
           this.modalShow = true;
           this.message = "게시글이 수정되었습니다.";
@@ -82,18 +103,27 @@ export default {
         .catch((error) => {
           console.log(error);
           this.modalShow = true;
-          this.message = "게시글이 수정 실패하였습니다.";
+          this.message = "게시글 수정 실패하였습니다.";
         });
     },
-    deletePost(pid) {
+    deletePost(type, pid) {
       // todo : implemnt delete post func
       // 이 함수에다가 게시글 삭제 코드 작성해주세요.
       // 전달받은 값
       // pid
       // ex) post.delete(pid);
-      console.log(pid);
-      this.modalShow = true;
-      this.message = "게시글이 삭제되었습니다.";
+      board
+        .deletePost(type, pid)
+        .then(() => {
+          this.isBack = true;
+          this.modalShow = true;
+          this.message = "게시글이 삭제되었습니다.";
+        })
+        .catch((error) => {
+          console.log(error);
+          this.modalShow = true;
+          this.message = "게시글 삭제 실패하였습니다.";
+        });
     },
     addComment(comment) {
       // todo : implemnt add comment func
@@ -116,7 +146,17 @@ export default {
       // ex) post.deleteComment(cid);
       console.log(cid);
       this.modalShow = true;
-      this.message = "댓글이F 삭제되었습니다.";
+      this.message = "댓글이 삭제되었습니다.";
+    },
+    // modal event
+    modalOk() {
+      console.log("ok");
+      this.modalShow = false;
+
+      if (this.isBack) {
+        this.$router.back();
+        this.isBack = false;
+      }
     },
   },
 };
