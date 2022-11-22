@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import MyMenuSide from "./MyMenuSide.vue";
 export default {
   name: "HomeView",
@@ -56,13 +56,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getUserInfo"]),
+    ...mapGetters(["getUser", "getUserInfo"]),
   },
   created() {
+    this.getUserInfoAction(this.getUser.uid);
     this.nickname = this.getUserInfo.nickname;
   },
   mounted() {},
   methods: {
+    ...mapActions(["getUserInfoAction"]),
     selectMenu(menu) {
       this.$refs.main.scrollTop = 0;
       this.$router.push({

@@ -6,7 +6,9 @@ const actions = {
     user
       .signIn(payload.email, payload.password)
       .then((response) => {
+        console.log(response.user);
         commit("setUser", response.user);
+        router.push("/home");
       })
       .catch((error) => {
         console.log(error);
@@ -15,8 +17,8 @@ const actions = {
   },
   getUserInfoAction({ commit }, payload) {
     user.getUserInfo(payload).then((response) => {
+      console.log(response);
       commit("setUserInfo", response);
-      router.push("/home");
     });
   },
 };

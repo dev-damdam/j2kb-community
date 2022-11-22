@@ -111,7 +111,12 @@ let user = {
   async getUserInfo(uid) {
     let user;
     const snapshot = await get(ref(this.db, "users/" + uid));
-    user = snapshot.val();
+    user = {
+      uid: uid,
+      email: snapshot.val().email,
+      nickname: snapshot.val().nickname,
+      register_date: snapshot.val().register_date,
+    };
     return user;
   },
 };

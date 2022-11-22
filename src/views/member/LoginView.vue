@@ -49,7 +49,6 @@
 import utils from "@/assets/common/utils";
 import { mapActions } from "vuex";
 // import authErrorMessages from "@/assets/firebase/authErrorMessage";
-import { mapGetters } from "vuex";
 import TemplateSignInMain from "@/components/templates/TemplateSignInMain.vue";
 import TemplateSignInFooter from "@/components/templates/TemplateSignInFooter.vue";
 
@@ -73,11 +72,8 @@ export default {
       errorMessage: "",
     };
   },
-  computed: {
-    ...mapGetters(["getUser"]),
-  },
   methods: {
-    ...mapActions(["signInAction", "getUserInfoAction"]),
+    ...mapActions(["signInAction"]),
     initValidatedState() {
       this.validateCheck = {
         email: {
@@ -117,7 +113,6 @@ export default {
       if (!check) return;
 
       this.signInAction({ email: this.email, password: this.password });
-      this.getUserInfoAction(this.getUser.uid);
 
       //   .catch((error) => {
       //     console.log(error.code);
