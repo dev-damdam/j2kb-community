@@ -30,10 +30,15 @@
         </b-form-textarea>
       </section>
       <section v-if="mode == 'read'" class="likes-wrapper">
-        <b-button pill variant="outline-primary">
+        <b-button
+          pill
+          variant="outline-primary"
+          :disabled="checkLikeState"
+          @click="addLike"
+        >
           추천<b-icon class="ml-1" icon="hand-thumbs-up" />
         </b-button>
-        <span class="ml-3">{{ post.likes }}</span>
+        <span class="ml-3">{{ Object.keys(post.likes).length }}</span>
       </section>
 
       <section v-if="mode == 'read'" class="comments-wrapper">
@@ -75,10 +80,6 @@ export default {
       type: String,
       require: true,
     },
-    reset: {
-      type: Boolean,
-      default: false,
-    },
     data: {
       type: Object,
       default: () => {
@@ -106,22 +107,26 @@ export default {
         return this.post.writer == this.getUserInfo.nickname;
       }
     },
+    checkLikeState() {
+      if (Object.keys(this.post.likes).length > 0) {
+        return Object.keys(this.post.likes).includes(this.getUserInfo.uid);
+      } else {
+        return false;
+      }
+    },
   },
   created() {
-    console.log(1);
     //set sample data
     this.setSampleData();
   },
   watch: {
-    reset(value) {
-      if (value) {
-        this.post = {
-          title: "",
-          writer: "",
-          write_date: "",
-          content: "",
-        };
-      }
+    data: {
+      // This will let Vue know to look inside the array
+      deep: true,
+      handler() {
+        //set sample data
+        this.setSampleData();
+      },
     },
   },
   methods: {
@@ -136,7 +141,6 @@ export default {
           content: "",
         };
       } else {
-        console.log(this.data);
         this.post = {
           type: this.data.type,
           pid: this.data.pid,
@@ -191,6 +195,10 @@ export default {
     deleteComment(comment) {
       console.log("delete comment");
       this.$emit("delete-comment", comment.id);
+    },
+    addLike() {
+      console.log("add like");
+      this.$emit("add-like", this.post.type, this.post.pid);
     },
   },
 };
@@ -316,5 +324,13 @@ export default {
 
 ::v-deep .form-control:disabled {
   background-color: white;
+}
+
+::v-deep .btn.disabled,
+.btn:disabled {
+  opacity: 1;
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
 }
 </style>

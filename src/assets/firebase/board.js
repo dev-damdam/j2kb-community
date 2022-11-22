@@ -13,12 +13,12 @@ let board = {
       writer: nickname,
       title: title,
       content: content,
-      likes: 0,
+      likes: [],
       write_date: write_date,
     };
 
     // Get a key for a new Post.
-    const newPostKey = push(child(ref(this.db), "posts/general")).key;
+    const newPostKey = push(child(ref(this.db), `posts/general`)).key;
     const updates = {};
     updates["/posts/general/" + newPostKey] = postData;
 
@@ -27,7 +27,6 @@ let board = {
 
   updatePost(type, pid, title, content) {
     // 게시글 수정 함수
-    console.log(`/posts/${type}/${pid}/`);
     return update(ref(this.db, `/posts/${type}/${pid}`), {
       title: title,
       content: content,
@@ -40,16 +39,27 @@ let board = {
     return remove(postRef);
   },
 
+  addPostLike(type, pid, uid) {
+    return update(ref(this.db, `/posts/${type}/${pid}/likes`), {
+      [uid]: true,
+    });
+  },
+
+  getPostLike(type, pid) {
+    const postRef = ref(this.db, `/posts/${type}/${pid}`);
+    return get(child(postRef, `/likes`));
+  },
+
   getGeneralPostList() {
     // 일반 게시판 게시글 목록 가져오는 함수
-    const postRef = ref(this.db, "posts/");
-    return get(child(postRef, "general/"));
+    const postRef = ref(this.db, `posts`);
+    return get(child(postRef, `/general/`));
   },
 
   getPostDetail(type, pid) {
     // 게시글 상세 정보 가져오는 함수
-    const postRef = ref(this.db, "posts/");
-    return get(child(postRef, `${type}/${pid}/`));
+    const postRef = ref(this.db, `posts`);
+    return get(child(postRef, `/${type}/${pid}/`));
   },
 };
 

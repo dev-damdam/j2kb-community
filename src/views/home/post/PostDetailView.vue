@@ -8,6 +8,7 @@
       @delete="deletePost"
       @add-comment="addComment"
       @delete-comment="deleteComment"
+      @add-like="addLike"
     />
     <beat-loader
       class="loader"
@@ -24,6 +25,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import BeatLoader from "vue-spinner/src/BeatLoader.vue";
 import board from "@/assets/firebase/board";
 import TemplatePost from "@/components/templates/TemplatePost.vue";
@@ -55,6 +57,9 @@ export default {
       dataLoading: false,
       isBack: false,
     };
+  },
+  computed: {
+    ...mapGetters(["getUserInfo"]),
   },
   methods: {
     async getPostDetail() {
@@ -147,6 +152,27 @@ export default {
       console.log(cid);
       this.modalShow = true;
       this.message = "댓글이 삭제되었습니다.";
+    },
+    addLike(type, pid) {
+      board
+        .addPostLike(type, pid, this.getUserInfo.uid)
+        .then(() => {
+          board
+            .getPostLike(type, pid)
+            .then((snapshot) => {
+              this.postData.likes = snapshot.val();
+            })
+            .catch((error) => {
+              console.log(error);
+              this.modalShow = true;
+              this.message = "추천 수 가져오기가 실패되었습니다.";
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+          this.modalShow = true;
+          this.message = "추천이 실패되었습니다.";
+        });
     },
     // modal event
     modalOk() {
