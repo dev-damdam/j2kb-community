@@ -59,7 +59,7 @@ export default {
         this.dataLoading = true;
       });
     },
-    modifyPost(postInfo) {
+    async modifyPost(postInfo) {
       // todo : implemnt modify post func
       // 이 함수에다가 작성한 게시글 업데이트 코드 작성해주세요.
       // 전달받은 값
@@ -73,9 +73,17 @@ export default {
       //   comments: [],
       // },
       // ex) post.modify(postInfo);
-      console.log(postInfo);
-      this.modalShow = true;
-      this.message = "게시글이 수정되었습니다.";
+      await board
+        .updatePost(this.type, this.pid, postInfo.title, postInfo.content)
+        .then(() => {
+          this.modalShow = true;
+          this.message = "게시글이 수정되었습니다.";
+        })
+        .catch((error) => {
+          console.log(error);
+          this.modalShow = true;
+          this.message = "게시글이 수정 실패하였습니다.";
+        });
     },
     deletePost(pid) {
       // todo : implemnt delete post func

@@ -22,12 +22,20 @@ let board = {
     return update(ref(this.db), updates);
   },
 
-  async getGeneralPostList() {
+  updatePost(type, pid, title, content) {
+    console.log(`/posts/${type}/${pid}/`);
+    return update(ref(this.db, `/posts/${type}/${pid}`), {
+      title: title,
+      content: content,
+    });
+  },
+
+  getGeneralPostList() {
     const postRef = ref(this.db, "posts/");
     return get(child(postRef, "general/"));
   },
 
-  async getPostDetail(type, pid) {
+  getPostDetail(type, pid) {
     const postRef = ref(this.db, "posts/");
     return get(child(postRef, `${type}/${pid}/`));
   },
