@@ -40,14 +40,33 @@ let board = {
   },
 
   addPostLike(type, pid, uid) {
+    // 좋아요 함수
     return update(ref(this.db, `/posts/${type}/${pid}/likes`), {
       [uid]: true,
     });
   },
 
   getPostLike(type, pid) {
+    // 좋아요 리스트 가져오는 함수
     const postRef = ref(this.db, `/posts/${type}/${pid}`);
     return get(child(postRef, `/likes`));
+  },
+
+  writeComment(type, pid, comment) {
+    // 댓글 작성 함수
+    const commentData = {
+      nickname: comment.writer,
+      content: comment.content,
+      write_date: comment.write_date,
+    };
+    const newCommentKey = push(
+      child(ref(this.db), `/posts/${type}/${pid}/comments`)
+    ).key;
+
+    const updates = {};
+    updates[`/posts/${type}/${pid}/comments/` + newCommentKey] = commentData;
+
+    return update(ref(this.db), updates);
   },
 
   getGeneralPostList() {

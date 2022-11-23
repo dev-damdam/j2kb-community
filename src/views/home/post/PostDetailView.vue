@@ -65,7 +65,6 @@ export default {
     async getPostDetail() {
       this.loader.loading = true;
       await board.getPostDetail(this.type, this.pid).then((snapshot) => {
-        console.log(snapshot.val());
         this.postData = {
           type: this.type,
           pid: this.pid,
@@ -74,7 +73,7 @@ export default {
           write_date: snapshot.val().write_date,
           content: snapshot.val().content,
           likes: snapshot.val().likes,
-          //comments: snapshot.val().comments
+          comments: snapshot.val().comments,
         };
         this.loader.loading = false;
         this.dataLoading = true;
@@ -130,7 +129,7 @@ export default {
           this.message = "게시글 삭제 실패하였습니다.";
         });
     },
-    addComment(comment) {
+    addComment(type, pid, comment) {
       // todo : implemnt add comment func
       // 이 함수에다가 댓글 추가 코드 작성해주세요.
       // 전달받은 값
@@ -141,7 +140,9 @@ export default {
       //   write_date: "2022.10.16 20:10:12",
       // },
       // ex) post.addComment(comment);
-      console.log(comment);
+      board.writeComment(type, pid, comment).then(() => {
+        console.log("댓글 작성 완료");
+      });
     },
     deleteComment(cid) {
       // todo : implemnt delete comment func

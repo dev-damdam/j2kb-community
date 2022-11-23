@@ -42,10 +42,14 @@
       </section>
 
       <section v-if="mode == 'read'" class="comments-wrapper">
-        <div v-for="comment in post.comments" :key="comment.id" class="comment">
+        <div
+          v-for="(comment, index) in post.comments"
+          :key="index"
+          class="comment"
+        >
           <span class="nickname">{{ comment.nickname }}</span>
           <span class="content">{{ comment.content }}</span>
-          <span class="write_date">{{ comment.write_date }}</span>
+          <span class="write_date"> {{ dateFormat(comment.write_date) }} </span>
           <b-button v-if="checkWriter" @click.prevent="deleteComment(comment)">
             <b-icon icon="trash" />
           </b-button>
@@ -71,6 +75,7 @@
   </div>
 </template>
 <script>
+import moment from "moment";
 import { mapGetters } from "vuex";
 
 export default {
@@ -116,8 +121,9 @@ export default {
     },
   },
   created() {
+    moment.locale("ko");
     //set sample data
-    this.setSampleData();
+    this.setPostData();
   },
   watch: {
     data: {
@@ -125,12 +131,15 @@ export default {
       deep: true,
       handler() {
         //set sample data
-        this.setSampleData();
+        this.setPostData();
       },
     },
   },
   methods: {
-    setSampleData() {
+    dateFormat(date) {
+      return moment(date).format("lll");
+    },
+    setPostData() {
       if (this.mode == "write") {
         this.post = {
           type: "general",
@@ -149,22 +158,7 @@ export default {
           write_date: this.data.write_date,
           content: this.data.content,
           likes: this.data.likes,
-          comments: [
-            {
-              pid: 0,
-              id: 0,
-              nickname: "기요미",
-              content: "와,, 저도 요즘 이런 고민을 하고 있었어요~",
-              write_date: "2022.10.16 20:10:12",
-            },
-            {
-              pid: 0,
-              id: 1,
-              nickname: "Lucy",
-              content: "댓글 감사합니다!",
-              write_date: "2022.10.16 20:29:12",
-            },
-          ],
+          comments: this.data.comments,
         };
       }
     },
@@ -178,12 +172,9 @@ export default {
     },
     addComment() {
       console.log("add comment");
-
-      // test
-      this.comment.pid = this.post.pid;
       this.comment.writer = this.getUserInfo.nickname;
       this.comment.write_date = new Date().toUTCString();
-      this.$emit("add-comment", this.comment);
+      this.$emit("add-comment", this.post.type, this.post.pid, this.comment);
     },
     writePost() {
       console.log("write post");
