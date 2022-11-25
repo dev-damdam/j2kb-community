@@ -6,9 +6,12 @@
           class="title-input"
           v-model="post.title"
           placeholder="제목을 입력해주세요."
-          :disabled="!checkWriter"
+          :disabled="!checkPostWriter"
         />
-        <div v-if="mode == 'read' && checkWriter" class="ml-3 button-wrapper">
+        <div
+          v-if="mode == 'read' && checkPostWriter"
+          class="ml-3 button-wrapper"
+        >
           <b-button @click="modifyPost">수정하기</b-button>
           <b-button @click="deletePost">삭제하기</b-button>
         </div>
@@ -25,7 +28,7 @@
           placeholder="내용을 입력해주세요."
           :rows="mode == 'read' ? 15 : 20"
           no-resize
-          :disabled="!checkWriter"
+          :disabled="!checkPostWriter"
         >
         </b-form-textarea>
       </section>
@@ -50,7 +53,10 @@
           <span class="nickname">{{ comment.nickname }}</span>
           <span class="content">{{ comment.content }}</span>
           <span class="write_date"> {{ dateFormat(comment.write_date) }} </span>
-          <b-button v-if="checkWriter" @click.prevent="deleteComment(comment)">
+          <b-button
+            v-if="checkCommentWriter(comment.nickname)"
+            @click.prevent="deleteComment(comment)"
+          >
             <b-icon icon="trash" />
           </b-button>
         </div>
@@ -105,7 +111,7 @@ export default {
         return this.mode == "write" ? "write-mode-title" : "read-mode-title";
       },
     },
-    checkWriter() {
+    checkPostWriter() {
       if (this.mode == "write") {
         return true;
       } else {
@@ -138,6 +144,9 @@ export default {
   methods: {
     dateFormat(date) {
       return moment(date).format("lll");
+    },
+    checkCommentWriter(writer) {
+      return this.getUserInfo.nickname == writer;
     },
     setPostData() {
       if (this.mode == "write") {
@@ -175,6 +184,8 @@ export default {
       this.comment.writer = this.getUserInfo.nickname;
       this.comment.write_date = new Date().toUTCString();
       this.$emit("add-comment", this.post.type, this.post.pid, this.comment);
+
+      this.comment.content = "";
     },
     writePost() {
       console.log("write post");
@@ -184,8 +195,9 @@ export default {
       this.$emit("write", this.post);
     },
     deleteComment(comment) {
+      console.log(comment);
       console.log("delete comment");
-      this.$emit("delete-comment", comment.id);
+      this.$emit("delete-comment", this.post.type, this.post.pid, comment);
     },
     addLike() {
       console.log("add like");

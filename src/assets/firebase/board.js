@@ -69,6 +69,16 @@ let board = {
     return update(ref(this.db), updates);
   },
 
+  getCommentList(type, pid) {
+    const commentRef = ref(this.db, `/posts/${type}/${pid}`);
+    return get(child(commentRef, `/comments/`));
+  },
+
+  deleteComment(type, pid, cid) {
+    const commentRef = ref(this.db, `/posts/${type}/${pid}/comments/${cid}`);
+    return remove(commentRef);
+  },
+
   getGeneralPostList() {
     // 일반 게시판 게시글 목록 가져오는 함수
     const postRef = ref(this.db, `posts`);

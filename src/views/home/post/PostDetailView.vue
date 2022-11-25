@@ -142,17 +142,44 @@ export default {
       // ex) post.addComment(comment);
       board.writeComment(type, pid, comment).then(() => {
         console.log("댓글 작성 완료");
+        this.updateCommentList(type, pid).then((res) => {
+          this.postData.comments = res;
+        });
       });
     },
-    deleteComment(cid) {
+    deleteComment(type, pid, commentInfo) {
       // todo : implemnt delete comment func
       // 이 함수에다가 댓글 삭제 코드 작성해주세요.
       // 전달받은 값
       // cid
       // ex) post.deleteComment(cid);
-      console.log(cid);
-      this.modalShow = true;
-      this.message = "댓글이 삭제되었습니다.";
+
+      // TODO : i need refactoring this code
+      board.getCommentList(type, pid).then((snapshot) => {
+        const keys = Object.keys(snapshot.val());
+        keys.forEach((key) => {
+          if (
+            snapshot.val()[key].content == commentInfo.content &&
+            snapshot.val()[key].write_date == commentInfo.write_date
+          ) {
+            board
+              .deleteComment(type, pid, key)
+              .then(() => {
+                this.modalShow = true;
+                this.message = "댓글이 삭제되었습니다.";
+                console.log(this.postData.comments);
+                this.updateCommentList(type, pid).then((res) => {
+                  this.postData.comments = res;
+                });
+              })
+              .catch((error) => {
+                console.log(error);
+                this.modalShow = true;
+                this.message = "댓글 삭제 실패하였습니다.";
+              });
+          }
+        });
+      });
     },
     addLike(type, pid) {
       board
@@ -184,6 +211,15 @@ export default {
         this.$router.back();
         this.isBack = false;
       }
+    },
+    async updateCommentList(type, pid) {
+      let list = [];
+      await board.getCommentList(type, pid).then((snapshot) => {
+        if (snapshot.exists()) {
+          list = snapshot.val();
+        }
+      });
+      return list;
     },
   },
 };
