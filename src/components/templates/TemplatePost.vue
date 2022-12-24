@@ -41,7 +41,7 @@
         >
           추천<b-icon class="ml-1" icon="hand-thumbs-up" />
         </b-button>
-        <span class="ml-3">{{ Object.keys(post.likes).length }}</span>
+        <span class="ml-3">{{ likesCount }}</span>
       </section>
 
       <section v-if="mode == 'read'" class="comments-wrapper">
@@ -119,11 +119,21 @@ export default {
       }
     },
     checkLikeState() {
+      if (this.post.likes == undefined) {
+        // 최초 글 작성 시 likes 키가 생성 안됨 -> 문제 해결 필요
+        return false;
+      }
       if (Object.keys(this.post.likes).length > 0) {
         return Object.keys(this.post.likes).includes(this.getUserInfo.uid);
       } else {
         return false;
       }
+    },
+    likesCount() {
+      if (this.post.likes == undefined) {
+        return 0;
+      }
+      return Object.keys(this.post.likes).length;
     },
   },
   created() {
